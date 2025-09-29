@@ -1,0 +1,5 @@
+_build/
+tests/
+test_inputs/
+examples/
+*.tar.gz
