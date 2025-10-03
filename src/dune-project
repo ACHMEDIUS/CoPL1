@@ -1,0 +1,5 @@
+(lang dune 3.6)
+(name main)
+(generate_opam_files true)
+(package
+ (name main))

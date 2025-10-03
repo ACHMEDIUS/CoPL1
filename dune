@@ -1,4 +1,0 @@
-(executable
- (name assignment1)
- (modules assignment1)
- (public_name assignment1))
