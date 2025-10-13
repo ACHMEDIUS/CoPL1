@@ -192,10 +192,11 @@ class TestComplexExpressions:
     """Test complex combined expressions."""
 
     def test_application_to_lambda(self):
-        """Test (λx.x) y."""
+        """Test (λx.x) y → y (with beta-reduction)."""
         stdout, stderr, returncode = run_parser("(\\x x) y\n")
         assert returncode == 0, f"Parser failed: {stderr}"
-        assert stdout.strip() == "((\\x x) y)"
+        # Now performs beta-reduction: (λx.x) y → y
+        assert stdout.strip() == "y"
 
     def test_complex_fixture(self):
         """Test complex expressions from fixture."""
@@ -256,14 +257,16 @@ class TestMixedValid:
     """Test mixed valid expressions with blank lines."""
 
     def test_mixed_fixture(self):
-        """Test mixed expressions with blank lines."""
+        """Test mixed expressions with blank lines (with beta-reduction)."""
         stdout, stderr, returncode = run_parser_file("mixed_valid.txt")
         assert returncode == 0, f"Parser failed: {stderr}"
         lines = stdout.strip().split("\n")
-        # Should have exactly the non-blank expressions
-        assert len(lines) == 4
+        # Should have exactly 5 non-blank expressions (with beta-reduction)
+        assert len(lines) == 5
         assert lines[0] == "x"
         assert "(\\x x)" in lines[1]
+        # Line 4 is (λx.x) y → y after beta-reduction
+        assert lines[3] == "y"
 
 
 class TestInvalidExpressions:
