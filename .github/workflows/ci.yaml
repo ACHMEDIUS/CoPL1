@@ -9,32 +9,22 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
-    env:
-      UV_PYTHON: "3.12"
 
     steps:
       - uses: actions/checkout@v5
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v6
+      - name: Install just
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
 
-      - name: Set up Python
-        run: uv python install
-
-      - name: Install OCaml and opam
+      - name: Install opam
         run: |
           sudo apt-get update
           sudo apt-get install -y opam
           opam init -y --disable-sandboxing
-          opam switch create 4.14.0 -y
-          eval $(opam env)
-          opam install dune -y
 
-      - name: Sync project
-        run: uv sync --locked --all-extras --dev
+      - name: Install project dependencies
+        run: just install
 
-      - name: Build project
-        run: uv run build
-
-      - name: Run tests
-        run: uv run test
+      - name: Build and test
+        run: just ci

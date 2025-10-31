@@ -1,6 +1,8 @@
 #!/usr/bin/env sh
 set -e
 
-uv run format
-uv run build
-uv run test
+export PATH="$HOME/bin:$PATH"
+eval $(opam env)
+just format
+just build
+just test
